@@ -1,0 +1,22 @@
+restart;
+with(linalg):
+with(plots):
+
+p1:= [1,0,0]:
+p2:= [0,1,0]:
+p3:= [0,0,1]:
+SLERP := proc(p,q,u) local theta;
+	theta := angle(p,q);
+	(sin((1-u)*theta)*p+sin(u*theta)*q)/sin(theta);
+	end proc:
+curveplot:= proc(p,q) local w;
+	pointplot3d([seq(evalf(SLERP(p,q,w/100)),w=1..100)], color=black, axes=normal);
+	end proc:
+polyplot:= proc(points) local t_points, t_idx;
+	if nops(points) > 2 then 
+		t_points := [op(points),points[1]];
+		for t_idx from 1 to nops(points) do curveplot(t_points[t_idx], t_points[t_idx + 1]); end do;
+	end if;
+	end proc:
+polyplot([p1,p2,p3])
+			
